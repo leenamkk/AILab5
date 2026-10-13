@@ -1,0 +1,153 @@
+male(abraham).
+male(clancy).
+male(herb).
+male(homer).
+male(bart).
+female(mona).
+female(jackie).
+female(marge).
+female(patty).
+female(selma).
+female(lisa).
+female(maggie).
+female(ling).
+parent(abraham, herb).
+parent(abraham, homer).
+parent(mona, herb).
+parent(mona, homer).
+
+parent(clancy, marge).
+parent(clancy, patty).
+parent(clancy, selma).
+parent(jackie, marge).
+parent(jackie, patty).
+parent(jackie, selma).
+
+parent(homer, bart).
+parent(homer, lisa).
+parent(homer, maggie).
+parent(marge, bart).
+parent(marge, lisa).
+parent(marge, maggie).
+
+parent(selma, ling).
+father(X, Y) :-
+    parent(X, Y),
+    male(X).
+
+mother(X, Y) :-
+    parent(X, Y),
+    female(X).
+
+son(X, Y) :-
+    parent(Y, X),
+    male(X).
+
+daughter(X, Y) :-
+    parent(Y, X),
+    female(X).
+
+brother(X, Y) :-
+    parent(Z, X),
+    parent(Z, Y),
+    male(X),
+    X \= Y.
+
+sister(X, Y) :-
+    parent(Z, X),
+    parent(Z, Y),
+    female(X),
+    X \= Y.
+
+grandfather(X, Z) :-
+    parent(X, Y),
+    parent(Y, Z),
+    male(X).
+
+aunt(X, Y) :-
+    parent(Z, Y),
+    sister(X, Z).
+
+uncle(X, Y) :-
+    parent(Z, Y),
+    brother(X, Z).
+
+cousin(X, Y) :-
+    parent(P1, X),
+    parent(P2, Y),
+    (brother(P1, P2) ; sister(P1, P2)).
+
+ancestor(X, Z) :-
+    parent(X, Z).
+
+ancestor(X, Z) :-
+    parent(X, Y),
+    ancestor(Y, Z).
+
+Queries :
+56 ?- father(homer, bart).
+true.
+
+57 ?- father(X, lisa).
+X = homer .
+
+58 ?- mother(marge, maggie).
+true.
+
+59 ?- mother(X, Y).
+X = mona,
+Y = herb .
+
+60 ?- son(bart, homer).
+true.
+
+61 ?- son(X, abraham).
+X = herb .
+
+62 ?- daughter(lisa, marge).
+true.
+
+63 ?- daughter(X, selma).
+X = ling.
+
+64 ?- brother(bart, lisa).
+true .
+
+65 ?- brother(X, marge).
+false.
+
+66 ?- sister(lisa, bart).
+true .
+
+67 ?- sister(X, patty).
+X = marge .
+
+68 ?- grandfather(abraham, bart).
+true.
+
+69 ?- grandfather(X, ling).
+X = clancy .
+
+70 ?- aunt(patty, bart).
+true .
+
+71 ?- aunt(X, lisa).
+X = patty .
+
+72 ?- uncle(herb, bart).
+true .
+
+73 ?- uncle(X, lisa).
+X = herb .
+
+74 ?- cousin(bart, ling).
+true .
+
+75 ?- cousin(X, ling).
+X = bart .
+
+76 ?- ancestor(abraham, lisa).
+true .
+
+77 ?- ancestor(X, bart).
+X = homer .
